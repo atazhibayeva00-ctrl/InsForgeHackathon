@@ -1,0 +1,27 @@
+.waves {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.waves-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.waves-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.waves-line {
+  opacity: 0.28;
+}

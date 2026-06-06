@@ -1,0 +1,89 @@
+.download-btn-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.download-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 2px solid #6366f1;
+  border-radius: 9999px;
+  overflow: hidden;
+  cursor: pointer;
+  background: transparent;
+  padding: 0;
+  font-family: inherit;
+}
+
+.download-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.download-btn-loading {
+  cursor: wait;
+}
+
+.download-btn-orbit {
+  position: absolute;
+  inset: 0;
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 50%;
+  margin: auto;
+  z-index: 20;
+}
+
+.download-btn-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 9999px;
+  background: #6366f1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.35);
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.download-btn-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #4338ca;
+  border-radius: 9999px;
+  z-index: 1;
+}
+
+.download-btn-icon {
+  width: 24px;
+  height: 24px;
+  color: #fff;
+  z-index: 20;
+}
+
+.download-btn-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  position: absolute;
+  z-index: 20;
+}
+
+.download-btn-label {
+  margin-left: 10px;
+  color: #4338ca;
+  font-size: 0.88rem;
+  font-weight: 600;
+  user-select: none;
+  z-index: 10;
+  white-space: nowrap;
+  padding-right: 18px;
+}

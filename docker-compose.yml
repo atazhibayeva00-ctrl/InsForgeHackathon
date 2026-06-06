@@ -1,0 +1,11 @@
+# Optional Redis stack for full Co-Gym async node architecture.
+# The current hackathon backend runs CoInvestmentEnv in-process and does not
+# require Redis; start this when you wire up TaskEnvNode / AgentNode / Runner.
+services:
+  redis-stack:
+    image: redis/redis-stack:latest
+    container_name: cogym-redis-stack
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+    restart: unless-stopped

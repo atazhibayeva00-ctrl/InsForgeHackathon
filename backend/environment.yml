@@ -1,0 +1,15 @@
+# Conda environment for the Collaborative Investment Copilot backend.
+# Matches the Co-Gym quick-start (Python 3.11).
+#
+#   conda env create -f environment.yml
+#   conda activate cogym-investment
+
+name: cogym-investment
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      - -r requirements.txt

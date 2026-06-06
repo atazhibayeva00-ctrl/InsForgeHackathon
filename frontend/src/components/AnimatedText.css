@@ -1,0 +1,25 @@
+.animated-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.animated-text-inner {
+  position: relative;
+}
+
+.animated-text-content {
+  margin: 0;
+  text-align: center;
+}
+
+.animated-text-underline {
+  position: absolute;
+  bottom: -16px;
+  left: 0;
+  color: #a5b4fc;
+  overflow: visible;
+  filter: drop-shadow(0 0 6px rgba(129, 140, 248, 0.6));
+}

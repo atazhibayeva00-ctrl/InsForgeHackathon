@@ -1,0 +1,13 @@
+.particle-text {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 18px;
+}
+
+.particle-text-canvas {
+  display: block;
+  width: 100%;
+  cursor: crosshair;
+}

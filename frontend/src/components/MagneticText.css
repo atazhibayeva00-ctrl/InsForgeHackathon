@@ -1,0 +1,87 @@
+.magnetic-text {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: none;
+  user-select: none;
+}
+
+.magnetic-base,
+.magnetic-hover-text {
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  line-height: 1.1;
+}
+@media (max-width: 640px) {
+  .magnetic-base,
+  .magnetic-hover-text {
+    font-size: 1.6rem;
+  }
+}
+
+.magnetic-text-scroll .magnetic-base,
+.magnetic-text-scroll .magnetic-hover-text {
+  font-size: 3.25rem;
+  font-weight: 800;
+}
+@media (max-width: 640px) {
+  .magnetic-text-scroll .magnetic-base,
+  .magnetic-text-scroll .magnetic-hover-text {
+    font-size: 2rem;
+  }
+}
+
+.magnetic-text-eyebrow .magnetic-base,
+.magnetic-text-eyebrow .magnetic-hover-text {
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.4;
+  max-width: 520px;
+}
+.magnetic-text-eyebrow .magnetic-base {
+  color: #c7d2fe;
+}
+.magnetic-text-eyebrow .magnetic-hover-text {
+  color: #312e81;
+}
+@media (max-width: 640px) {
+  .magnetic-text-eyebrow .magnetic-base,
+  .magnetic-text-eyebrow .magnetic-hover-text {
+    font-size: 0.78rem;
+    max-width: 280px;
+  }
+}
+
+/* base layer = light text on the dark page */
+.magnetic-base {
+  color: #f8fafc;
+}
+
+/* the magnetic reveal circle = light fill */
+.magnetic-circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  border-radius: 9999px;
+  background: #f8fafc;
+  overflow: hidden;
+}
+
+.magnetic-inner {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* revealed text = dark, so it reads against the light circle */
+.magnetic-hover-text {
+  color: #05080f;
+}

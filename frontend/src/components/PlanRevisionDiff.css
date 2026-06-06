@@ -1,0 +1,78 @@
+.plan-revision-diff {
+  margin-top: 16px;
+  padding: 14px;
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 12px;
+}
+
+.revision-title {
+  margin: 0 0 4px;
+  font-size: 0.95rem;
+  color: #f3f4f6;
+}
+
+.revision-sub {
+  margin: 0 0 12px;
+  font-size: 0.82rem;
+  color: #9ca3af;
+}
+
+.revision-block {
+  margin-top: 12px;
+}
+
+.revision-block h4 {
+  margin: 0 0 8px;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9ca3af;
+}
+
+.revision-block ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.revision-block li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.84rem;
+  color: #e5e7eb;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(31, 41, 55, 0.6);
+}
+
+.revision-key {
+  font-weight: 600;
+  color: #f3f4f6;
+}
+
+.trade-removed {
+  border-left: 3px solid #f87171;
+}
+
+.trade-added {
+  border-left: 3px solid #4ade80;
+}
+
+.trade-rationale {
+  width: 100%;
+  font-size: 0.78rem;
+  color: #9ca3af;
+}
+
+.plan-revision-diff .delta-up {
+  color: #86efac;
+}
+
+.plan-revision-diff .delta-down {
+  color: #fca5a5;
+}

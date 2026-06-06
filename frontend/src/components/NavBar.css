@@ -1,0 +1,125 @@
+.navbar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  margin-bottom: 24px;
+}
+@media (min-width: 640px) {
+  .navbar {
+    top: 0;
+    bottom: auto;
+    margin-bottom: 0;
+    padding-top: 20px;
+  }
+}
+
+.navbar-animated {
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+/* hidden state on mobile (bar sits at the bottom) */
+.navbar-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(28px);
+}
+/* hidden state on desktop (bar sits at the top) */
+@media (min-width: 640px) {
+  .navbar-hidden {
+    transform: translateX(-50%) translateY(-28px);
+  }
+}
+
+.navbar-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(17, 24, 39, 0.65);
+  border: 1px solid rgba(129, 140, 248, 0.25);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 5px;
+  border-radius: 999px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+}
+
+.nav-item {
+  position: relative;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 8px 22px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: #cbd5e1;
+  transition: color 0.2s;
+  font-family: inherit;
+}
+.nav-item:hover {
+  color: #a5b4fc;
+}
+.nav-item-active {
+  background: rgba(129, 140, 248, 0.18);
+  color: #e0e7ff;
+}
+
+.nav-label {
+  display: none;
+}
+.nav-icon {
+  display: inline-flex;
+}
+@media (min-width: 768px) {
+  .nav-label {
+    display: inline;
+  }
+  .nav-icon {
+    display: none;
+  }
+}
+
+.nav-lamp {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  background: rgba(99, 102, 241, 0.06);
+  border-radius: 999px;
+  z-index: -1;
+}
+.lamp-bar {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 4px;
+  background: #6366f1;
+  border-radius: 9999px 9999px 0 0;
+}
+.lamp-glow {
+  position: absolute;
+  background: rgba(99, 102, 241, 0.25);
+  border-radius: 999px;
+}
+.lamp-glow-1 {
+  width: 48px;
+  height: 24px;
+  filter: blur(12px);
+  top: -8px;
+  left: -8px;
+}
+.lamp-glow-2 {
+  width: 32px;
+  height: 24px;
+  filter: blur(12px);
+  top: -4px;
+}
+.lamp-glow-3 {
+  width: 16px;
+  height: 16px;
+  filter: blur(8px);
+  top: 0;
+  left: 8px;
+}

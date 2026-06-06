@@ -1,0 +1,47 @@
+.text-disperse {
+  position: relative;
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.text-disperse-char {
+  display: inline-block;
+  position: relative;
+}
+
+.text-disperse-eyebrow {
+  font-size: 1.8rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+  color: #c7d2fe;
+  max-width: 720px;
+  text-align: center;
+}
+
+.text-disperse-eyebrow-main {
+  font-size: 2.25rem;
+  font-weight: 700;
+}
+
+.text-disperse-eyebrow-sub {
+  font-size: 1.75rem;
+  color: #a5b4fc;
+}
+
+@media (max-width: 640px) {
+  .text-disperse-eyebrow {
+    max-width: 340px;
+  }
+
+  .text-disperse-eyebrow-main {
+    font-size: 1.45rem;
+  }
+
+  .text-disperse-eyebrow-sub {
+    font-size: 1.15rem;
+  }
+}

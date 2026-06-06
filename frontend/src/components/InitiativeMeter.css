@@ -1,0 +1,81 @@
+.initiative-meter {
+  margin-bottom: 16px;
+  padding: 14px;
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 12px;
+}
+
+.initiative-meter-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.initiative-meter-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #9ca3af;
+}
+
+.initiative-meter-sub {
+  font-size: 0.78rem;
+  color: #d1d5db;
+  font-weight: 600;
+}
+
+.initiative-meter-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #374151;
+}
+
+.initiative-segment {
+  height: 100%;
+  transition: width 0.35s ease;
+}
+
+.initiative-agent {
+  background: linear-gradient(90deg, #6366f1, #818cf8);
+}
+
+.initiative-human {
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+}
+
+.initiative-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin-top: 12px;
+}
+
+.initiative-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: #d1d5db;
+}
+
+.initiative-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.initiative-legend-label {
+  font-weight: 600;
+}
+
+.initiative-legend-count {
+  color: #9ca3af;
+  font-variant-numeric: tabular-nums;
+}

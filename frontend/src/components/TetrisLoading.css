@@ -1,0 +1,54 @@
+.tetris-loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tetris-board {
+  padding: 3px;
+  border: 2px solid #e5e7eb;
+  background: #030712;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.tetris-row {
+  display: flex;
+}
+
+.tetris-cell {
+  width: var(--tetris-cell-size);
+  height: var(--tetris-cell-size);
+  border: 1px solid #374151;
+  background: #111827;
+  transform: scale(0.95);
+  transition:
+    background 100ms ease,
+    opacity 100ms ease,
+    transform 100ms ease;
+}
+
+.tetris-cell-filled {
+  background: #f9fafb;
+  transform: scale(1);
+}
+
+.tetris-cell-clearing {
+  opacity: 0.55;
+  animation: tetris-pulse 200ms ease-in-out infinite alternate;
+}
+
+.tetris-loading-text {
+  margin: 0;
+  color: #c7d2fe;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+@keyframes tetris-pulse {
+  from {
+    opacity: 0.45;
+  }
+  to {
+    opacity: 0.9;
+  }
+}

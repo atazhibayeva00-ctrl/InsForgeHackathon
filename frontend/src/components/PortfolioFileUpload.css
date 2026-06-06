@@ -1,0 +1,109 @@
+.portfolio-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.portfolio-upload-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.portfolio-upload-preview {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid #374151;
+  background: #1f2937;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.portfolio-upload-icon {
+  width: 20px;
+  height: 20px;
+  color: #6b7280;
+}
+
+.portfolio-upload-icon-active {
+  color: #a5b4fc;
+}
+
+.portfolio-upload-trigger {
+  padding: 8px 16px;
+  background: #f3f4f6;
+  color: #111827;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+
+.portfolio-upload-trigger:hover:not(:disabled) {
+  background: #e5e7eb;
+}
+
+.portfolio-upload-trigger:focus-visible {
+  outline: 2px solid #f3f4f6;
+  outline-offset: 2px;
+}
+
+.portfolio-upload-trigger:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.portfolio-upload-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.portfolio-upload-name {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.portfolio-upload-remove {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.875rem;
+  color: #f87171;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.15s;
+}
+
+.portfolio-upload-remove:hover:not(:disabled) {
+  color: #fca5a5;
+}
+
+.portfolio-upload-remove:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.portfolio-upload-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

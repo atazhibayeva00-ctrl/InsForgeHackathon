@@ -1,0 +1,5 @@
+ticker,shares,cost_basis,current_price,asset_class
+NVDA,40,400,950,stock
+AAPL,120,150,220,stock
+VOO,20,380,520,etf
+BND,20,72,72,bond
