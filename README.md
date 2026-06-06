@@ -1,6 +1,6 @@
-# Collaborative Investment Copilot
+# CoVest: Collaborative Investment Copilot
 
-A human-in-the-loop personal investment assistant inspired by [Collaborative Gym](https://github.com/SALT-NLP/collaborative-gym) ([Shao et al., 2025 — arXiv:2412.15701](https://arxiv.org/abs/2412.15701)).
+CoVest is a human-in-the-loop personal investment assistant inspired by [Collaborative Gym](https://github.com/SALT-NLP/collaborative-gym) ([Shao et al., 2025 — arXiv:2412.15701](https://arxiv.org/abs/2412.15701)).
 
 The agent analyzes your portfolio and **proposes** rebalances — you approve, reject, or add constraints before anything is treated as final. It is a collaborative copilot, **not** an autonomous trading bot.
 
@@ -84,7 +84,7 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173 and click **Load sample portfolio**. The agent will analyze and propose through Redis/WebSocket.
+Open http://localhost:5173 and click **Load complex demo** for the hackathon scenario. The agent will analyze and propose through Redis/WebSocket.
 
 ### Smoke Tests
 
@@ -100,6 +100,11 @@ python scripts/run_distributed_session.py
 COGYM_HTTP_BASE=http://127.0.0.1:8010 \
 COGYM_WS_BASE=ws://127.0.0.1:8010 \
 python scripts/test_distributed_server.py
+
+# Browser E2E flow (backend must already be running)
+cd frontend
+PLAYWRIGHT_BROWSERS_PATH=0 npm exec playwright install chromium
+npm run test:e2e
 ```
 
 ## CSV format
@@ -112,13 +117,31 @@ python scripts/test_distributed_server.py
 | `cost_basis` | no | Average cost basis (for unrealized gain flags) |
 | `asset_class` | no | stock, etf, bond, cash |
 
-## Demo script (90 seconds)
+## Hackathon demo script (2 minutes)
 
-1. **Load sample portfolio** — concentrated in NVDA + AAPL.
-2. The distributed agent analyzes the portfolio and proposes a plan.
-3. In the feedback box, type: `Don't sell NVDA — long-term hold` → **Revise with feedback**.
-4. The agent revises through the Redis/WebSocket flow.
-5. Click **Approve plan** — see the approved target allocation, collaboration log, and collaboration score.
+Team name suggestion: **Controlled Alpha**.
+
+1. **Open with the research** — show the homepage and say: “CoVest is built on Stanford's Collaborative Gym research, applied to personal investing.”
+2. **Launch the workspace** — use **Slide to launch** to move from the research story into the copilot.
+3. **Load complex demo** — this uses `backend/data/demo_complex_portfolio.csv`, a portfolio with AI/tech concentration, overlapping ETFs, limited bonds, and taxable winners.
+4. **Let the agent propose** — point out that the agent analyzes through Redis/WebSocket and waits for the human instead of executing.
+5. **Add a latent preference** — type `Cannot sell META because it is employer stock.` and revise, showing that the agent adapts to human constraints.
+6. **Approve a cycle** — approve the revised plan, showing mock-applied trades and the collaboration score.
+7. **Repeat** — start the next review cycle to show the workflow is continuous, not one-shot.
+8. **Close on the dashboard** — show collaboration score by cycle and expected portfolio value.
+
+Close line: **“The key is not autonomous trading. It is controlled collaboration for high-stakes financial decisions.”**
+
+## Demo reliability checklist
+
+- Start Redis: `brew services start redis`
+- Start backend fresh: `cd backend && .venv/bin/python -m uvicorn collaborative_gym.server:app --host 127.0.0.1 --port 8010`
+- Start frontend fresh: `cd frontend && npm run dev`
+- Run frontend build: `npm --prefix frontend run build`
+- Run backend/WebSocket smoke test: `COGYM_HTTP_BASE=http://127.0.0.1:8010 COGYM_WS_BASE=ws://127.0.0.1:8010 python scripts/test_distributed_server.py`
+- Install Playwright browser once if needed: `cd frontend && PLAYWRIGHT_BROWSERS_PATH=0 npm exec playwright install chromium`
+- Run browser E2E: `cd frontend && npm run test:e2e`
+- If Claude/API is unavailable, use the built-in rule-based fallback planner.
 
 ## API endpoints
 

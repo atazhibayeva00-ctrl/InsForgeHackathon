@@ -193,6 +193,7 @@ export function loadSample(cash = 5000, userGoal?: string): Promise<SessionState
 export function initSampleSession(
   cash = 5000,
   userGoal: string = INVESTMENT_GOALS[0].value,
+  portfolioPreset?: 'complex',
 ): Promise<InitSessionResponse> {
   return postJSON('/api/init_env', {
     user_id: 'human',
@@ -200,8 +201,16 @@ export function initSampleSession(
     env_args: {
       query: userGoal,
       cash_balance: cash,
+      ...(portfolioPreset ? { portfolio_preset: portfolioPreset } : {}),
     },
   })
+}
+
+export function initComplexDemoSession(
+  cash = 5000,
+  userGoal: string = INVESTMENT_GOALS[0].value,
+): Promise<InitSessionResponse> {
+  return initSampleSession(cash, userGoal, 'complex')
 }
 
 export async function uploadPortfolio(

@@ -4,10 +4,19 @@ __pycache__/
 *.pyc
 .env
 
+# Local runtime data
+backend/data/sessions.db
+backend/data/sessions.db-*
+backend/workdir/
+.cogym-ref/
+
 # Node
+node_modules/
 frontend/node_modules/
 frontend/dist/
 frontend/.vite/
+frontend/playwright-report/
+test-results/
 
 # OS
 .DS_Store

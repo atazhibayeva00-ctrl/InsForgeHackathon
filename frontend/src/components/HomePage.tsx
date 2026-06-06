@@ -135,9 +135,9 @@ export function HomePage({ onLaunch }: Props) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="visually-hidden">Your investment copilot. You decide. It assists.</h1>
+        <h1 className="visually-hidden">CoVest. Your investment copilot. You decide. It assists.</h1>
         <ParticleTextEffect
-          words={['Your investment copilot.', 'You decide. It assists.']}
+          words={['CoVest.', 'Your investment copilot.', 'You decide. It assists.']}
           height={360}
         />
         <div className="eyebrow-disperse-wrap">
@@ -148,7 +148,7 @@ export function HomePage({ onLaunch }: Props) {
             Inspired by Collaborative Gym
           </TextDisperse>
           <p className="research-context">
-            This demo is built on top of the Stanford Collaborative Gym research paper and adapts its
+            CoVest is built on top of the Stanford Collaborative Gym research paper and adapts its
             human-agent collaboration loop for personal investing.
           </p>
           <a
@@ -384,7 +384,7 @@ function CopilotMock() {
         <span className="mock-dot" />
         <span className="mock-dot" />
         <span className="mock-dot" />
-        <span className="mock-title">Collaborative Investment Copilot</span>
+        <span className="mock-title">CoVest: Collaborative Investment Copilot</span>
       </div>
       <div className="mock-body">
         <div className="mock-panel">

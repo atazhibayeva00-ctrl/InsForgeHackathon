@@ -5,12 +5,14 @@ The shared workspace is now a real Collaborative Gym task environment
 thin adapters that translate human/agent intents into Co-Gym actions and call
 ``env.step(role, action)`` — so the backend follows the Co-Gym ``CoEnv`` setup
 while keeping the existing frontend contract intact.
+
+Sessions are persisted to SQLite (``backend/data/sessions.db``) so state
+survives server restarts.
 """
 
 from __future__ import annotations
 
 import json
-import uuid
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -20,6 +22,7 @@ from pydantic import BaseModel
 
 from agent import generate_plan
 from collaborative_gym.envs import EnvFactory  # noqa: F401  (registers envs)
+from storage import get_session_store
 
 DATA_DIR = Path(__file__).parent / "data"
 SAMPLE_CSV = DATA_DIR / "sample_portfolio.csv"
@@ -35,9 +38,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# In-memory sessions. Each holds a live CoEnv plus the collaboration event log
-# and the most recent plan metadata (LLM vs. fallback) for the UI.
-SESSIONS: Dict[str, Dict[str, Any]] = {}
+store = get_session_store()
 
 
 class CollabMetrics(BaseModel):
@@ -98,25 +99,11 @@ def _propose_action_string(plan: Dict[str, Any]) -> str:
 
 
 def _build_session(csv_text: str, cash_balance: float, user_goal: str) -> Dict[str, Any]:
-    session_id = uuid.uuid4().hex[:12]
-    env = EnvFactory.make(
-        name="investment",
-        team_members=TEAM_MEMBERS,
-        env_id=f"env_{session_id}",
-        query=user_goal,
-        portfolio_csv=csv_text,
-        cash_balance=cash_balance,
-    )
-    state = {
-        "session_id": session_id,
-        "env": env,
-        "log": [],
-        "plan_meta": {},
-        "prior_plan": None,
-        "allocation_before": None,
-    }
-    SESSIONS[session_id] = state
-    return state
+    return store.create(csv_text, cash_balance, user_goal)
+
+
+def _persist(state: Dict[str, Any]) -> None:
+    store.save(state)
 
 
 def _log_append(
@@ -137,11 +124,14 @@ def _serialize(state: Dict[str, Any]) -> SessionState:
     ctx = pub["portfolio"]
 
     plan = pub["plan"]
+    if plan is None and pub.get("last_approved_plan"):
+        plan = pub["last_approved_plan"]
     if plan is not None and state.get("plan_meta"):
-        # Re-attach LLM/fallback provenance the env doesn't track.
         plan = {**plan, **state["plan_meta"]}
 
     metrics = env.evaluate_task_performance()
+    plan_status = str(metrics.get("plan_status", pub["plan_status"]))
+    approved = plan_status == "approved" or pub["plan_status"] == "cycle_complete"
 
     return SessionState(
         session_id=state["session_id"],
@@ -157,12 +147,12 @@ def _serialize(state: Dict[str, Any]) -> SessionState:
         constraints=pub["constraints"],
         plan=plan,
         prior_plan=state.get("prior_plan"),
-        approved=pub["plan_status"] == "approved",
+        approved=approved,
         collab_metrics=CollabMetrics(
             delivered=int(metrics.get("delivered", 0)),
             task_performance=float(metrics.get("task_performance", 0)),
             collab_score=float(metrics.get("collab_score", 0)),
-            plan_status=str(metrics.get("plan_status", "none")),
+            plan_status=plan_status,
             constraints_respected=list(metrics.get("constraints_respected", [])),
         ),
         log=state["log"],
@@ -170,7 +160,7 @@ def _serialize(state: Dict[str, Any]) -> SessionState:
 
 
 def _get(session_id: str) -> Dict[str, Any]:
-    state = SESSIONS.get(session_id)
+    state = store.get(session_id)
     if state is None:
         raise HTTPException(status_code=404, detail="Session not found")
     return state
@@ -183,9 +173,25 @@ def _step(state: Dict[str, Any], role: str, action: str) -> None:
         raise HTTPException(status_code=400, detail=info["action_error"])
 
 
+@app.on_event("startup")
+def _startup() -> None:
+    get_session_store()
+
+
 @app.get("/api/health")
-def health() -> Dict[str, str]:
-    return {"status": "ok"}
+def health() -> Dict[str, Any]:
+    return {
+        "status": "ok",
+        "storage": "sqlite",
+        "db_path": str(store.db_path),
+        "sessions": len(store.list_session_ids(limit=10_000)),
+    }
+
+
+@app.get("/api/session/{session_id}", response_model=SessionState)
+def get_session(session_id: str) -> SessionState:
+    """Load a persisted session (rehydrates env from SQLite if not in memory)."""
+    return _serialize(_get(session_id))
 
 
 @app.post("/api/sample", response_model=SessionState)
@@ -223,6 +229,7 @@ def add_constraint(req: ConstraintRequest) -> SessionState:
             f"Added constraint: {constraint}",
             initiative="human_constraint",
         )
+        _persist(state)
     return _serialize(state)
 
 
@@ -237,7 +244,6 @@ def propose(req: ProposeRequest) -> SessionState:
     if state.get("allocation_before") is None:
         state["allocation_before"] = dict(portfolio.get("allocation_by_class", {}))
 
-    # Agent takes the analysis task action, then proposes a plan.
     _step(state, "agent", "ANALYZE_PORTFOLIO()")
     plan = generate_plan(
         portfolio,
@@ -262,6 +268,7 @@ def propose(req: ProposeRequest) -> SessionState:
             f"Waiting for your input on {len(questions)} question(s).",
             initiative="waiting_for_user",
         )
+    _persist(state)
     return _serialize(state)
 
 
@@ -289,6 +296,7 @@ def revise(req: ReviseRequest) -> SessionState:
         plan.get("message", ""),
         initiative="agent_initiative",
     )
+    _persist(state)
     return _serialize(state)
 
 
@@ -310,6 +318,7 @@ def approve(req: ApproveRequest) -> SessionState:
     state = _get(req.session_id)
     _step(state, "human", "APPROVE_PLAN()")
     _log_append(state, "user", "Approved the plan.", initiative="human_approve")
+    _persist(state)
     return _serialize(state)
 
 
@@ -320,4 +329,5 @@ def reject(req: ApproveRequest) -> SessionState:
     state["prior_plan"] = None
     _step(state, "human", "REJECT_PLAN()")
     _log_append(state, "user", "Rejected the plan.", initiative="human_override")
+    _persist(state)
     return _serialize(state)

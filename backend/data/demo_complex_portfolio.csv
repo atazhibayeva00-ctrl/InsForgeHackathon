@@ -1,0 +1,11 @@
+ticker,shares,cost_basis,current_price,asset_class
+NVDA,35,180,950,stock
+AAPL,95,120,220,stock
+MSFT,45,240,430,stock
+META,30,160,500,stock
+QQQ,40,310,460,etf
+VOO,25,370,520,etf
+BND,18,72,72,bond
+VXUS,12,52,61,etf
+TSLA,16,210,175,stock
+CASH,1,1,1,cash

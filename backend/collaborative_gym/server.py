@@ -54,6 +54,9 @@ WORKDIR.mkdir(parents=True, exist_ok=True)
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 AGENT_NAME = "agent"
 DISABLE_AGENT = os.getenv("DISABLE_AGENT", "false").lower() == "true"
+PORTFOLIO_PRESETS = {
+    "complex": BACKEND_ROOT / "data" / "demo_complex_portfolio.csv",
+}
 
 load_api_key(str(BACKEND_ROOT / "secrets.toml"))
 
@@ -105,6 +108,18 @@ def _default_env_args() -> dict[str, Any]:
     }
 
 
+def _apply_portfolio_preset(env_args: dict[str, Any]) -> dict[str, Any]:
+    preset = env_args.pop("portfolio_preset", None)
+    if not preset:
+        return env_args
+
+    preset_path = PORTFOLIO_PRESETS.get(str(preset))
+    if not preset_path or not preset_path.exists():
+        raise HTTPException(status_code=400, detail=f"Unknown portfolio preset: {preset}")
+    env_args["portfolio_csv"] = preset_path.read_text()
+    return env_args
+
+
 async def _parse_init_request(
     request: Request,
     user_id: str | None,
@@ -121,7 +136,7 @@ async def _parse_init_request(
         parsed_env_args = body.get("env_args", _default_env_args())
         if isinstance(parsed_env_args, str):
             parsed_env_args = json.loads(parsed_env_args)
-        return parsed_user_id, parsed_env_class, parsed_env_args
+        return parsed_user_id, parsed_env_class, _apply_portfolio_preset(parsed_env_args)
 
     parsed_user_id = user_id or "human"
     parsed_env_class = env_class or "investment"
@@ -129,7 +144,7 @@ async def _parse_init_request(
     if file is not None:
         raw = await file.read()
         parsed_env_args["portfolio_csv"] = raw.decode("utf-8")
-    return parsed_user_id, parsed_env_class, parsed_env_args
+    return parsed_user_id, parsed_env_class, _apply_portfolio_preset(parsed_env_args)
 
 
 @app.get("/api/health")

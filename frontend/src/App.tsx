@@ -3,6 +3,7 @@ import './App.css'
 import { Gauge, Home, LineChart } from 'lucide-react'
 import {
   INVESTMENT_GOALS,
+  initComplexDemoSession,
   initSampleSession,
   initUploadedSession,
   getCogymResult,
@@ -237,7 +238,7 @@ function App() {
           <header className="topbar">
             <div>
               <TextScramble as="h1" duration={1.2} speed={0.035} trigger={view === 'app'}>
-                Collaborative Investment Copilot
+                CoVest: Collaborative Investment Copilot
               </TextScramble>
               <p className="subtitle">
                 Human-in-the-loop portfolio assistant — the agent proposes, you decide.
@@ -262,6 +263,14 @@ function App() {
               disabled={busy}
               onDownload={() =>
                 startDistributedSession(() => initSampleSession(cash, userGoal))
+              }
+            />
+
+            <DownloadButton
+              label="Load complex demo"
+              disabled={busy}
+              onDownload={() =>
+                startDistributedSession(() => initComplexDemoSession(cash, userGoal))
               }
             />
 
