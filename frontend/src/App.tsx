@@ -26,6 +26,7 @@ import { DownloadButton } from './components/DownloadButton'
 import { PortfolioFileUpload } from './components/PortfolioFileUpload'
 import { DashboardPanel } from './components/DashboardPanel'
 import { TextScramble } from './components/TextScramble'
+import { TetrisLoading } from './components/TetrisLoading'
 
 const NAV_ITEMS: NavItem[] = [
   { name: 'Home', id: 'home', icon: Home },
@@ -328,11 +329,21 @@ function App() {
 
           {!state && (
             <div className="welcome">
-              <p>
-                Load the sample portfolio or upload a CSV with columns{' '}
-                <code>ticker, shares, current_price</code> (optional:{' '}
-                <code>cost_basis, asset_class</code>) to begin.
-              </p>
+              {busy && agentStatus ? (
+                <div className="agent-progress welcome-loading" role="status" aria-live="polite">
+                  <TetrisLoading
+                    size="sm"
+                    speed="normal"
+                    loadingText={agentStatus}
+                  />
+                </div>
+              ) : (
+                <p>
+                  Load the sample portfolio or upload a CSV with columns{' '}
+                  <code>ticker, shares, current_price</code> (optional:{' '}
+                  <code>cost_basis, asset_class</code>) to begin.
+                </p>
+              )}
             </div>
           )}
 

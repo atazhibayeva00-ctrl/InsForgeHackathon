@@ -218,12 +218,39 @@
 
 .agent-progress {
   margin: 12px 0;
-  padding: 10px 12px;
-  border: 1px solid rgba(129, 140, 248, 0.3);
-  border-radius: 10px;
-  background: rgba(79, 70, 229, 0.12);
+  padding: 12px 14px;
+  border: 1px solid #374151;
+  border-radius: 12px;
+  background: #111827;
   color: #c7d2fe;
   font-size: 0.88rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.agent-progress.empty-loading,
+.agent-progress.welcome-loading {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  padding: 20px 16px;
+}
+
+.welcome.welcome-loading,
+.welcome:has(.welcome-loading) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+  background: #1f2937;
+  border: 1px solid #374151;
+  color: #9ca3af;
+}
+
+.panel .empty:has(.empty-loading) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 140px;
 }
 
 .panel .badge {

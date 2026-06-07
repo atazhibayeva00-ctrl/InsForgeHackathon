@@ -34,7 +34,18 @@ export function ProposalPanel({
   const plan = state.plan
   const hasActiveSession = Boolean(state.session_id)
   const isCycleComplete = state.plan_status === 'cycle_complete'
-  const showProgress = busy && agentStatus
+  const isEmptyState = !plan && !isCycleComplete
+
+  const emptyLoadingMessage = (() => {
+    if (!isEmptyState) return null
+    if (busy && agentStatus) return agentStatus
+    if (busy) return 'Agent is analyzing the portfolio…'
+    if (hasActiveSession) return 'Agent is preparing a plan…'
+    return null
+  })()
+
+  const panelLoadingMessage =
+    !isEmptyState && busy && agentStatus ? agentStatus : null
 
   const submitRevise = () => {
     if (!feedback.trim()) return
@@ -70,12 +81,12 @@ export function ProposalPanel({
         </p>
       )}
 
-      {showProgress && (
+      {panelLoadingMessage && (
         <div className="agent-progress" role="status" aria-live="polite">
           <TetrisLoading
             size="sm"
             speed="normal"
-            loadingText={agentStatus}
+            loadingText={panelLoadingMessage}
           />
         </div>
       )}
@@ -99,19 +110,27 @@ export function ProposalPanel({
         </div>
       )}
 
-      {!plan && !isCycleComplete && (
+      {isEmptyState && (
         <div className="empty">
-          <p className="muted">
-            The agent will analyze your portfolio and propose a plan. You stay in
-            control — approve, reject, or revise before anything is final.
-          </p>
-          <button
-            className="btn primary"
-            disabled={busy || hasActiveSession}
-            onClick={onPropose}
-          >
-            {busy ? 'Analyzing…' : hasActiveSession ? 'Agent is preparing a plan…' : 'Analyze & propose plan'}
-          </button>
+          {emptyLoadingMessage ? (
+            <div className="agent-progress empty-loading" role="status" aria-live="polite">
+              <TetrisLoading
+                size="sm"
+                speed="normal"
+                loadingText={emptyLoadingMessage}
+              />
+            </div>
+          ) : (
+            <>
+              <p className="muted">
+                The agent will analyze your portfolio and propose a plan. You stay in
+                control — approve, reject, or revise before anything is final.
+              </p>
+              <button className="btn primary" disabled={busy} onClick={onPropose}>
+                Analyze & propose plan
+              </button>
+            </>
+          )}
         </div>
       )}
 
