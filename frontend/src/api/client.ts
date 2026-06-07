@@ -125,6 +125,28 @@ export interface CogymResult {
   task_performance: CollabMetrics | null
 }
 
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '')
+
+function apiUrl(path: string): string {
+  return `${API_BASE_URL}${path}`
+}
+
+function wsUrl(path: string): string {
+  const explicitWsBase = (import.meta.env.VITE_WS_BASE_URL ?? '').replace(/\/$/, '')
+  if (explicitWsBase) {
+    return `${explicitWsBase}${path}`
+  }
+
+  if (API_BASE_URL) {
+    const url = new URL(API_BASE_URL)
+    url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:'
+    return `${url.origin}${path}`
+  }
+
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+  return `${protocol}//${window.location.host}${path}`
+}
+
 export const INVESTMENT_GOALS = [
   { id: 'balanced', label: 'Balanced growth', value: 'Balanced long-term growth with moderate risk' },
   { id: 'growth', label: 'Aggressive growth', value: 'Maximize long-term growth; higher risk tolerance' },
@@ -187,7 +209,7 @@ async function postSession(url: string, body: unknown = {}): Promise<SessionStat
 }
 
 export function loadSample(cash = 5000, userGoal?: string): Promise<SessionState> {
-  return postSession(`/api/sample?${goalQuery(cash, userGoal)}`)
+  return postSession(apiUrl(`/api/sample?${goalQuery(cash, userGoal)}`))
 }
 
 export function initSampleSession(
@@ -195,7 +217,7 @@ export function initSampleSession(
   userGoal: string = INVESTMENT_GOALS[0].value,
   portfolioPreset?: 'complex',
 ): Promise<InitSessionResponse> {
-  return postJSON('/api/init_env', {
+  return postJSON(apiUrl('/api/init_env'), {
     user_id: 'human',
     env_class: 'investment',
     env_args: {
@@ -220,7 +242,7 @@ export async function uploadPortfolio(
 ): Promise<SessionState> {
   const form = new FormData()
   form.append('file', file)
-  const res = await fetch(`/api/upload?${goalQuery(cash, userGoal)}`, {
+  const res = await fetch(apiUrl(`/api/upload?${goalQuery(cash, userGoal)}`), {
     method: 'POST',
     body: form,
   })
@@ -247,7 +269,7 @@ export async function initUploadedSession(
     }),
   )
   form.append('file', file)
-  return postForm('/api/init_env', form)
+  return postForm(apiUrl('/api/init_env'), form)
 }
 
 export async function postCogymAction(
@@ -255,11 +277,11 @@ export async function postCogymAction(
   user_id: string,
   action: string,
 ): Promise<void> {
-  await postJSON(`/api/post_action/${session_id}/${user_id}`, { action })
+  await postJSON(apiUrl(`/api/post_action/${session_id}/${user_id}`), { action })
 }
 
 export function getCogymResult(session_id: string): Promise<CogymResult> {
-  return fetch(`/api/result/${session_id}`).then(async (res) => {
+  return fetch(apiUrl(`/api/result/${session_id}`)).then(async (res) => {
     if (!res.ok) {
       const detail = await res.text()
       throw new Error(detail || `Request failed: ${res.status}`)
@@ -274,8 +296,7 @@ export function openCogymSocket(
   onMessage: (message: CogymWsMessage) => void,
   onError: (error: Event) => void,
 ): WebSocket {
-  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-  const socket = new WebSocket(`${protocol}//${window.location.host}/ws/${session_id}/${user_id}`)
+  const socket = new WebSocket(wsUrl(`/ws/${session_id}/${user_id}`))
 
   socket.addEventListener('open', () => {
     socket.send(JSON.stringify({ type: 'request_state' }))

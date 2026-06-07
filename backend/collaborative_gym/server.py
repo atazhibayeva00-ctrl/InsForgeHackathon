@@ -58,7 +58,9 @@ PORTFOLIO_PRESETS = {
     "complex": BACKEND_ROOT / "data" / "demo_complex_portfolio.csv",
 }
 
-load_api_key(str(BACKEND_ROOT / "secrets.toml"))
+secrets_path = BACKEND_ROOT / "secrets.toml"
+if secrets_path.exists():
+    load_api_key(str(secrets_path))
 
 app = FastAPI(title="Collaborative Investment Copilot - Distributed Co-Gym")
 app.add_middleware(
